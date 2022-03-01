@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
 CFN_TEMPLATE_FILENAME=$1
