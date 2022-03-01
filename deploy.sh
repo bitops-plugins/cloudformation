@@ -59,8 +59,9 @@ echo "cd cloudformation Root: $CLOUDFORMATION_ROOT"
 cd $CLOUDFORMATION_ROOT
 
 # cloud provider auth
-echo "cloudformation auth cloud provider"
-bash $SCRIPTS_DIR/aws/sts.get-caller-identity.sh
+# Disabling this as this functionality will be in aws plugins
+# echo "cloudformation auth cloud provider"
+# bash $SCRIPTS_DIR/aws/sts.get-caller-identity.sh
 
 # always run cfn template validation first
 if [[ "${CFN_TEMPLATE_VALIDATION}" == "True" ]] || [[ "${CFN_TEMPLATE_VALIDATION}" == "true" ]]; then
