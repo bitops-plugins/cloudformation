@@ -1,0 +1,21 @@
+terraform:
+  type: object
+  properties:
+    cli:
+      type: object
+      properties:
+        version:
+          type: string
+          parameter: version
+          export_env: VERSION_CLI_FLAG
+    options:
+      type: object
+      properties:
+        name:
+          type: string
+          export_env: MY_NAME
+          default: world
+        color:
+          type: string
+          export_env: TERRAFORM_DIR
+          default: blue
