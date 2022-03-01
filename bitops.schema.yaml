@@ -1,21 +1,45 @@
-terraform:
+cloudformation:
   type: object
   properties:
     cli:
       type: object
       properties:
-        version:
+        validate-cfn:
+          type: boolean
+          export_env: CFN_TEMPLATE_VALIDATION
+          default: true
+        cfn-stack-action:
           type: string
-          parameter: version
-          export_env: VERSION_CLI_FLAG
+          export_env: CFN_STACK_ACTION
+          default: deploy
     options:
       type: object
       properties:
-        name:
+        cfn-stack-name:
           type: string
-          export_env: MY_NAME
-          default: world
-        color:
+          export_env: CFN_STACK_NAME
+        s3bucket:
           type: string
-          export_env: TERRAFORM_DIR
-          default: blue
+          export_env: CFN_TEMPLATE_S3_BUCKET
+        s3prefix:
+          type: string
+          export_env: CFN_S3_PREFIX
+        capabilities:
+          type: string
+          export_env: CFN_CAPABILITY
+        cfn-files:
+          type: object
+          properties:
+            template-file:
+              type: string
+              export_env: CFN_TEMPLATE_FILENAME
+            parameters:
+              type: object
+              properties:
+                enabled: 
+                  type: boolean
+                  default: true
+                  export_env: CFN_PARAMS_FLAG
+                template-param-file:
+                  type: string
+                  export_env: CFN_TEMPLATE_PARAMS_FILENAME

@@ -66,17 +66,17 @@ cd $CLOUDFORMATION_ROOT
 # always run cfn template validation first
 if [[ "${CFN_TEMPLATE_VALIDATION}" == "True" ]] || [[ "${CFN_TEMPLATE_VALIDATION}" == "true" ]]; then
   echo "Running Cloudformation Template Validation"
-  bash $PLUGINS_DIR/cloudformation/cloudformation_validate.sh "$CFN_TEMPLATE_FILENAME"
+  bash $PLUGINS_DIR/cloudformation/scripts/cloudformation_validate.sh "$CFN_TEMPLATE_FILENAME"
 fi
 
 if [[ "${CFN_STACK_ACTION}" == "deploy" ]] || [[ "${CFN_STACK_ACTION}" == "Deploy" ]]; then
   echo "Running Cloudformation Deploy Stack"
-  bash $PLUGINS_DIR/cloudformation/cloudformation_deploy.sh "$CFN_TEMPLATE_FILENAME" "$CFN_PARAMS_FLAG" "$CFN_TEMPLATE_PARAMS_FILENAME" "$CFN_STACK_NAME" "$CFN_CAPABILITY" "$CFN_TEMPLATE_S3_BUCKET" "$CFN_S3_PREFIX"
+  bash $PLUGINS_DIR/cloudformation/scripts/cloudformation_deploy.sh "$CFN_TEMPLATE_FILENAME" "$CFN_PARAMS_FLAG" "$CFN_TEMPLATE_PARAMS_FILENAME" "$CFN_STACK_NAME" "$CFN_CAPABILITY" "$CFN_TEMPLATE_S3_BUCKET" "$CFN_S3_PREFIX"
 fi
 
 if [[ "${CFN_STACK_ACTION}" == "delete" ]] || [[ "${CFN_STACK_ACTION}" == "Delete" ]]; then
   echo "Running Cloudformation Delete Stack"
-  bash $PLUGINS_DIR/cloudformation/cloudformation_delete.sh "$CFN_STACK_NAME"
+  bash $PLUGINS_DIR/cloudformation/scripts/cloudformation_delete.sh "$CFN_STACK_NAME"
 fi
 
 # Check for After Deploy Scripts
