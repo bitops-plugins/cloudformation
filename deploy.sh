@@ -7,13 +7,20 @@ echo "Welcome to the CloudFormation BitOps plugin!"
 printenv
 
 # cloudformation vars
-export CLOUDFORMATION_ROOT="$ENVROOT/cloudformation" 
-export CLOUDFORMATION_BITOPS_CONFIG="$CLOUDFORMATION_ROOT/bitops.config.yaml" 
-export BITOPS_SCHEMA_ENV_FILE="$CLOUDFORMATION_ROOT/ENV_FILE"
-export BITOPS_CONFIG_SCHEMA="$PLUGINS_DIR/cloudformation/bitops.schema.yaml"
+# export CLOUDFORMATION_ROOT="$ENVROOT/cloudformation" 
+# export CLOUDFORMATION_BITOPS_CONFIG="$CLOUDFORMATION_ROOT/bitops.config.yaml" 
+# export BITOPS_SCHEMA_ENV_FILE="$CLOUDFORMATION_ROOT/ENV_FILE"
+# export BITOPS_CONFIG_SCHEMA="$PLUGINS_DIR/cloudformation/bitops.schema.yaml"
 
+export CLOUDFORMATION_ROOT_SCRIPTS="$PLUGIN_DIR"
+export CLOUDFORMATION_ROOT_OPERATIONS="$PLUGIN_ENVIRONMENT_DIR"
 
-if [ ! -d "$CLOUDFORMATION_ROOT" ]; then
+export CLOUDFORMATION_ROOT="$CLOUDFORMATION_ROOT_OPERATIONS" 
+export CLOUDFORMATION_BITOPS_CONFIG="$CLOUDFORMATION_ROOT_OPERATIONS/bitops.config.yaml" 
+export BITOPS_SCHEMA_ENV_FILE="$CLOUDFORMATION_ROOT_OPERATIONS/ENV_FILE"
+export BITOPS_CONFIG_SCHEMA="$CLOUDFORMATION_ROOT_SCRIPTS/bitops.schema.yaml"
+
+if [ ! -d "$CLOUDFORMATION_ROOT_OPERATIONS" ]; then
   echo "No cloudformation directory.  Skipping."
   exit 0
 else
@@ -28,7 +35,7 @@ else
 fi
 
 # Check for Before Deploy Scripts
-bash $SCRIPTS_DIR/deploy/before-deploy.sh "$CLOUDFORMATION_ROOT"
+bash $SCRIPTS_DIR/deploy/before-deploy.sh "$CLOUDFORMATION_ROOT_OPERATIONS"
 
 #export BITOPS_CONFIG_COMMAND="$(ENV_FILE="$BITOPS_SCHEMA_ENV_FILE" DEBUG="" bash $SCRIPTS_DIR/bitops-config/convert-schema.sh $BITOPS_CONFIG_SCHEMA $CLOUDFORMATION_BITOPS_CONFIG)"
 #echo "BITOPS_CONFIG_COMMAND: $BITOPS_CONFIG_COMMAND"
@@ -55,8 +62,8 @@ if [[ "${CFN_PARAMS_FLAG}" == "True" ]] || [[ "${CFN_PARAMS_FLAG}" == "true" ]];
   fi
 fi
 
-echo "cd cloudformation Root: $CLOUDFORMATION_ROOT"
-cd $CLOUDFORMATION_ROOT
+echo "cd cloudformation Root: $CLOUDFORMATION_ROOT_OPERATIONS"
+cd $CLOUDFORMATION_ROOT_OPERATIONS
 
 # cloud provider auth
 # Disabling this as this functionality will be in aws plugins
@@ -66,18 +73,18 @@ cd $CLOUDFORMATION_ROOT
 # always run cfn template validation first
 if [[ "${CFN_TEMPLATE_VALIDATION}" == "True" ]] || [[ "${CFN_TEMPLATE_VALIDATION}" == "true" ]]; then
   echo "Running Cloudformation Template Validation"
-  bash $PLUGINS_DIR/cloudformation/scripts/cloudformation_validate.sh "$CFN_TEMPLATE_FILENAME"
+  bash $CLOUDFORMATION_ROOT_SCRIPTS/scripts/cloudformation_validate.sh "$CFN_TEMPLATE_FILENAME"
 fi
 
 if [[ "${CFN_STACK_ACTION}" == "deploy" ]] || [[ "${CFN_STACK_ACTION}" == "Deploy" ]]; then
   echo "Running Cloudformation Deploy Stack"
-  bash $PLUGINS_DIR/cloudformation/scripts/cloudformation_deploy.sh "$CFN_TEMPLATE_FILENAME" "$CFN_PARAMS_FLAG" "$CFN_TEMPLATE_PARAMS_FILENAME" "$CFN_STACK_NAME" "$CFN_CAPABILITY" "$CFN_TEMPLATE_S3_BUCKET" "$CFN_S3_PREFIX"
+  bash $CLOUDFORMATION_ROOT_SCRIPTS/scripts/cloudformation_deploy.sh "$CFN_TEMPLATE_FILENAME" "$CFN_PARAMS_FLAG" "$CFN_TEMPLATE_PARAMS_FILENAME" "$CFN_STACK_NAME" "$CFN_CAPABILITY" "$CFN_TEMPLATE_S3_BUCKET" "$CFN_S3_PREFIX"
 fi
 
 if [[ "${CFN_STACK_ACTION}" == "delete" ]] || [[ "${CFN_STACK_ACTION}" == "Delete" ]]; then
   echo "Running Cloudformation Delete Stack"
-  bash $PLUGINS_DIR/cloudformation/scripts/cloudformation_delete.sh "$CFN_STACK_NAME"
+  bash $CLOUDFORMATION_ROOT_SCRIPTS/scripts/cloudformation_delete.sh "$CFN_STACK_NAME"
 fi
 
 # Check for After Deploy Scripts
-bash $PLUGINS_DIR/deploy/after-deploy.sh "$CLOUDFORMATION_ROOT"
+bash $SCRIPTS_DIR/deploy/after-deploy.sh "$CLOUDFORMATION_ROOT_OPERATIONS"
