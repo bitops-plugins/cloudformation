@@ -18,6 +18,6 @@ fi
 echo "Waiting on cloudformation $ACTION completion..."
 aws cloudformation wait stack-delete-complete --stack-name $CFN_STACK_NAME
 
-cho "Checking if cloudformation stack $CFN_STACK_NAME still exists..."
+echo "Checking if cloudformation stack $CFN_STACK_NAME still exists..."
 aws cloudformation describe-stacks --stack-name $CFN_STACK_NAME | jq '.Stacks[0]'
 echo "Finished cloudfromation $ACTION action successfully !!!"
