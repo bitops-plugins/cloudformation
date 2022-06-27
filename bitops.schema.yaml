@@ -36,7 +36,7 @@ cloudformation:
             parameters:
               type: object
               properties:
-                enabled: 
+                template-param-flag: 
                   type: boolean
                   default: true
                   export_env: CFN_PARAMS_FLAG
