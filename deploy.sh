@@ -14,6 +14,8 @@ printenv
 
 export CLOUDFORMATION_ROOT_SCRIPTS="$BITOPS_PLUGIN_DIR"
 export CLOUDFORMATION_ROOT_OPERATIONS="$BITOPS_OPSREPO_ENVIRONMENT_DIR"
+export CFN_STACK_NAME="$BITOPS_CFN_STACK_NAME"
+export CFN_TEMPLATE_FILENAME="$BITOPS_CFN_TEMPLATE_FILENAME"
 
 export CLOUDFORMATION_BITOPS_CONFIG="$CLOUDFORMATION_ROOT_OPERATIONS/bitops.config.yaml" 
 export BITOPS_SCHEMA_ENV_FILE="$CLOUDFORMATION_ROOT_OPERATIONS/ENV_FILE"
@@ -45,20 +47,20 @@ fi
 
 # Exit if Stack Name not found
 if [[ "${CFN_STACK_NAME=}" == "" ]] || [[ "${CFN_STACK_NAME=}" == "''" ]] || [[ "${CFN_STACK_NAME=}" == "None" ]]; then
-  >&2 echo "{\"error\":\"$CFN_STACK_NAME config is required in bitops config.Exiting...\"}"
+  >&2 echo "{\"error\":\"$CFN_STACK_NAME CFN_STACK_NAME config is required in bitops config.Exiting...\"}"
   exit 1
 fi
 
 # Exit if CFN Template Filename is not found
 if [[ "${CFN_TEMPLATE_FILENAME==}" == "" ]] || [[ "${CFN_TEMPLATE_FILENAME==}" == "''" ]] || [[ "${CFN_TEMPLATE_FILENAME==}" == "None" ]]; then
-  >&2 echo "{\"error\":\"$CFN_TEMPLATE_FILENAME config is required in bitops config.Exiting...\"}"
+  >&2 echo "{\"error\":\"$CFN_TEMPLATE_FILENAME CFN_TEMPLATE_FILENAME config is required in bitops config.Exiting...\"}"
   exit 1
 fi
 
 # Exit if CFN Template Parameters Filename is not found
 if [[ "${CFN_PARAMS_FLAG}" == "True" ]] || [[ "${CFN_PARAMS_FLAG}" == "true" ]]; then
   if [[ "${CFN_TEMPLATE_PARAMS_FILENAME}" == "" ]] || [[ "${CFN_TEMPLATE_PARAMS_FILENAME}" == "''" ]] || [[ "${CFN_TEMPLATE_PARAMS_FILENAME}" == "None" ]]; then
-    >&2 echo "{\"error\":\"$CFN_TEMPLATE_FILENAME config is required in bitops config.Exiting...\"}"
+    >&2 echo "{\"error\":\"$CFN_TEMPLATE_FILENAME CFN_TEMPLATE_FILENAME config is required in bitops config.Exiting...\"}"
     exit 1
   fi
 fi
