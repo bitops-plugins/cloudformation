@@ -21,101 +21,49 @@ if [ -n "$CFN_TEMPLATE_S3_BUCKET" ] && [ -n "$CFN_S3_PREFIX" ]; then
   fi
 fi
 
-
 echo "Checking if stack exists ..."
-
-if ! aws cloudformation describe-stacks --region $AWS_DEFAULT_REGION --stack-name $CFN_STACK_NAME ; then
-
+STACK_EXISTS=$(aws cloudformation describe-stacks --region $AWS_DEFAULT_REGION --stack-name $CFN_STACK_NAME|jq '.Stacks[0].StackId')
+if [[ -z $STACK_EXISTS  ]]
+then
+	ACTION="create-stack"
   echo -e "\nStack does not exist, creating ..."
-  aws cloudformation create-stack \
-    --region $AWS_DEFAULT_REGION \
-    --stack-name $CFN_STACK_NAME \
-    ${@:3}
-
-  echo "Waiting for stack to be created ..."
-  aws cloudformation wait stack-create-complete \
-    --region $AWS_DEFAULT_REGION \
-    --stack-name $CFN_STACK_NAME \
-
 else
-
+  ACTION="update-stack"
   echo -e "\nStack exists, attempting update ..."
-
-  set +e
-  update_output=$( aws cloudformation update-stack \
-    --region $AWS_DEFAULT_REGION \
-    --stack-name $CFN_STACK_NAME \
-    ${@:3}  2>&1)
-  status=$?
-  set -e
-
-  echo "$update_output"
-
-  if [ $status -ne 0 ] ; then
-
-    # Don't fail for no-op update
-    if [[ $update_output == *"ValidationError"* && $update_output == *"No updates"* ]] ; then
-      echo -e "\nFinished create/update - no updates to be performed"
-      exit 0
-    else
-      exit $status
-    fi
-
-  fi
-
-  echo "Waiting for stack update to complete ..."
-  aws cloudformation wait stack-update-complete \
-    --region $AWS_DEFAULT_REGION \
-    --stack-name $CFN_STACK_NAME \
-
 fi
 
-echo "Finished create/update successfully!"
+if [[ "${CFN_PARAMS_FLAG}" == "True" ]] || [[ "${CFN_PARAMS_FLAG}" == "true" ]]; then
+    echo "Parameters file exist..."
+    CFN_OUTPUT=$(aws cloudformation $ACTION \
+    --stack-name $CFN_STACK_NAME \
+    --region $AWS_DEFAULT_REGION \
+    $CFN_TEMPLATE_PARAM \
+    --parameters=file://$CFN_TEMPLATE_PARAMS_FILENAME \
+    --capabilities $CFN_CAPABILITY \
+    )
+else
+    echo "Parameters file doesn't exist..."
+    CFN_OUTPUT=$(aws cloudformation $ACTION \
+    --stack-name $CFN_STACK_NAME \
+    --region $AWS_DEFAULT_REGION \
+    $CFN_TEMPLATE_PARAM \
+    --capabilities $CFN_CAPABILITY \
+    )
+fi
 
+if [ "$ACTION" == "create-stack" ]; then
+  echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
+  aws cloudformation wait stack-create-complete --stack-name ${CFN_STACK_NAME}
+else
+  echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
+    # Don't fail for no-op update
+  if [[ $CFN_OUTPUT == *"ValidationError"* && $CFN_OUTPUT == *"No updates"* ]] ; then
+    echo -e "\nFinished create/update - no updates to be performed"
+    exit 0
+  else
+    aws cloudformation wait stack-update-complete --stack-name ${CFN_STACK_NAME}
+  fi
+fi
 
-# echo "Checking if stack exists ..."
-# STACK_EXISTS=$(aws cloudformation describe-stacks --region $AWS_DEFAULT_REGION --stack-name $CFN_STACK_NAME|jq '.Stacks[0].StackId')
-# if [[ -z $STACK_EXISTS  ]]
-# then
-# 	ACTION="create-stack"
-#   echo -e "\nStack does not exist, creating ..."
-# else
-#   ACTION="update-stack"
-#   echo -e "\nStack exists, attempting update ..."
-# fi
-
-# if [[ "${CFN_PARAMS_FLAG}" == "True" ]] || [[ "${CFN_PARAMS_FLAG}" == "true" ]]; then
-#     echo "Parameters file exist..."
-#     CFN_OUTPUT=$(aws cloudformation $ACTION \
-#     --stack-name $CFN_STACK_NAME \
-#     --region $AWS_DEFAULT_REGION \
-#     $CFN_TEMPLATE_PARAM \
-#     --parameters=file://$CFN_TEMPLATE_PARAMS_FILENAME \
-#     --capabilities $CFN_CAPABILITY \
-#     )
-# else
-#     echo "Parameters file doesn't exist..."
-#     CFN_OUTPUT=$(aws cloudformation $ACTION \
-#     --stack-name $CFN_STACK_NAME \
-#     --region $AWS_DEFAULT_REGION \
-#     $CFN_TEMPLATE_PARAM \
-#     --capabilities $CFN_CAPABILITY \
-#     )
-# fi
-
-# if [ "$ACTION" == "create-stack" ]; then
-#   echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
-#   aws cloudformation wait stack-create-complete --stack-name ${CFN_STACK_NAME}
-# else
-#   echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
-#     # Don't fail for no-op update
-#   if [[ $CFN_OUTPUT == *"ValidationError"* && $CFN_OUTPUT == *"No updates"* ]] ; then
-#     echo -e "\nFinished create/update - no updates to be performed"
-#     exit 0
-#   else
-#     aws cloudformation wait stack-update-complete --stack-name ${CFN_STACK_NAME}
-#   fi
-# fi
-
-# aws cloudformation describe-stacks --stack-name ${CFN_STACK_NAME} | jq '.Stacks[0]'
-# echo "Finished cloudfromation action $ACTION successfully !!!"
+aws cloudformation describe-stacks --stack-name ${CFN_STACK_NAME} | jq '.Stacks[0]'
+echo "Finished cloudfromation action $ACTION successfully !!!"
