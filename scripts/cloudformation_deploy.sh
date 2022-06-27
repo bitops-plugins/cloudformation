@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+# set -e
 
 CFN_TEMPLATE_FILENAME=$1
 CFN_PARAMS_FLAG=$2
@@ -22,48 +22,94 @@ if [ -n "$CFN_TEMPLATE_S3_BUCKET" ] && [ -n "$CFN_S3_PREFIX" ]; then
 fi
 
 echo "Checking if stack exists ..."
-STACK_EXISTS=$(aws cloudformation describe-stacks --region $AWS_DEFAULT_REGION --stack-name $CFN_STACK_NAME|jq '.Stacks[0].StackId')
-if [[ -z $STACK_EXISTS  ]]
-then
-	ACTION="create-stack"
-  echo -e "\nStack does not exist, creating ..."
-else
-  ACTION="update-stack"
+
+STACK_EXISTS_OUTPUT=$(aws cloudformation describe-stacks --region $AWS_DEFAULT_REGION --stack-name $CFN_STACK_NAME 2>&1)
+
+RESULT=$?
+
+if [ $RESULT -eq 0 ]; then
   echo -e "\nStack exists, attempting update ..."
-fi
+  ACTION="update-stack"
+  echo $ACTION
+  if [[ "${CFN_PARAMS_FLAG}" == "True" ]] || [[ "${CFN_PARAMS_FLAG}" == "true" ]]; then
+      echo "Parameters file exist..."
+      CFN_OUTPUT=$(aws cloudformation $ACTION \
+      --stack-name $CFN_STACK_NAME \
+      --region $AWS_DEFAULT_REGION \
+      $CFN_TEMPLATE_PARAM \
+      --parameters=file://$CFN_TEMPLATE_PARAMS_FILENAME \
+      --capabilities $CFN_CAPABILITY \
+      2>&1 \
+      )
 
-if [[ "${CFN_PARAMS_FLAG}" == "True" ]] || [[ "${CFN_PARAMS_FLAG}" == "true" ]]; then
-    echo "Parameters file exist..."
-    CFN_OUTPUT=$(aws cloudformation $ACTION \
-    --stack-name $CFN_STACK_NAME \
-    --region $AWS_DEFAULT_REGION \
-    $CFN_TEMPLATE_PARAM \
-    --parameters=file://$CFN_TEMPLATE_PARAMS_FILENAME \
-    --capabilities $CFN_CAPABILITY \
-    )
-else
-    echo "Parameters file doesn't exist..."
-    CFN_OUTPUT=$(aws cloudformation $ACTION \
-    --stack-name $CFN_STACK_NAME \
-    --region $AWS_DEFAULT_REGION \
-    $CFN_TEMPLATE_PARAM \
-    --capabilities $CFN_CAPABILITY \
-    )
-fi
-
-if [ "$ACTION" == "create-stack" ]; then
-  echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
-  aws cloudformation wait stack-create-complete --stack-name ${CFN_STACK_NAME}
-else
-  echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
-    # Don't fail for no-op update
-  if [[ $CFN_OUTPUT == *"ValidationError"* && $CFN_OUTPUT == *"No updates"* ]] ; then
-    echo -e "\nFinished create/update - no updates to be performed"
-    exit 0
   else
-    aws cloudformation wait stack-update-complete --stack-name ${CFN_STACK_NAME}
+      echo "Parameters file doesn't exist..."
+      CFN_OUTPUT=$(aws cloudformation $ACTION \
+      --stack-name $CFN_STACK_NAME \
+      --region $AWS_DEFAULT_REGION $CFN_TEMPLATE_PARAM \
+      --capabilities $CFN_CAPABILITY \
+      2>&1 \
+      )
   fi
+  UPDATE_RESULT=$?
+
+  if [[ $UPDATE_RESULT -eq 0 ]]; then
+    echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
+    echo "CFN_OUTPUT: "$CFN_OUTPUT
+    aws cloudformation wait stack-update-complete \
+    --region $AWS_DEFAULT_REGION \
+    --stack-name ${CFN_STACK_NAME} \
+
+    echo -e "Finished cloudfromation action $ACTION successfully !!!"
+  else
+    echo "Stack Update ValidationError: May be No Updates "
+    echo "CFN_OUTPUT: "$CFN_OUTPUT
+    if [[ $CFN_OUTPUT == *"ValidationError"* && $CFN_OUTPUT == *"No updates"* ]] ; then
+      echo -e "\nFinished $ACTION - no updates to be performed"
+      exit 0
+    else
+      echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..." 
+      aws cloudformation wait stack-update-complete \
+      --region $AWS_DEFAULT_REGION \
+      --stack-name ${CFN_STACK_NAME} \
+      
+      echo -e "Finished cloudfromation action $ACTION successfully !!!"
+    fi
+    exit $UPDATE_RESULT
+  fi
+
+else
+  echo "STACK_EXISTS_OUTPUT" $STACK_EXISTS_OUTPUT
+  echo -e "\nStack does not exist, creating ..."
+  ACTION="create-stack"
+  echo $ACTION
+  if [[ "${CFN_PARAMS_FLAG}" == "True" ]] || [[ "${CFN_PARAMS_FLAG}" == "true" ]]; then
+      echo "Parameters file exist..."
+      CFN_OUTPUT=$(aws cloudformation $ACTION \
+      --stack-name $CFN_STACK_NAME \
+      --region $AWS_DEFAULT_REGION \
+      $CFN_TEMPLATE_PARAM \
+      --parameters=file://$CFN_TEMPLATE_PARAMS_FILENAME \
+      --capabilities $CFN_CAPABILITY \
+      )
+  else
+      echo "Parameters file doesn't exist..."
+      CFN_OUTPUT=$(aws cloudformation $ACTION \
+      --stack-name $CFN_STACK_NAME \
+      --region $AWS_DEFAULT_REGION \
+      $CFN_TEMPLATE_PARAM \
+      --capabilities $CFN_CAPABILITY \
+      )
+  fi
+  echo "Waiting on cloudformation stack ${CFN_STACK_NAME} $ACTION completion..."
+  aws cloudformation wait stack-create-complete \
+  --region $AWS_DEFAULT_REGION \
+  --stack-name ${CFN_STACK_NAME} 
+
+  aws cloudformation describe-stacks \
+  --region $AWS_DEFAULT_REGION \
+  --stack-name ${CFN_STACK_NAME} | jq '.Stacks[0]'
+  echo -e "Finished cloudfromation action $ACTION successfully !!!"
+  exit $RESULT
 fi
 
-aws cloudformation describe-stacks --stack-name ${CFN_STACK_NAME} | jq '.Stacks[0]'
-echo "Finished cloudfromation action $ACTION successfully !!!"
