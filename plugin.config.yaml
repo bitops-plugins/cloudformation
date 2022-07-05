@@ -6,5 +6,5 @@ plugin:
   deployment:
     language: bash
     deployment_script: deploy.sh
-    core_schema_parsing: false
-    life_cycle_scripts: false
+    core_schema_parsing: true
+    life_cycle_scripts: true
