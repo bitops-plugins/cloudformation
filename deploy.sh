@@ -11,7 +11,7 @@ printenv
 # export CLOUDFORMATION_BITOPS_CONFIG="$CLOUDFORMATION_ROOT/bitops.config.yaml" 
 # export BITOPS_SCHEMA_ENV_FILE="$CLOUDFORMATION_ROOT/ENV_FILE"
 # export BITOPS_CONFIG_SCHEMA="$PLUGINS_DIR/cloudformation/bitops.schema.yaml"
-
+export PLUGINS_ROOT_DIR="$BITOPS_PLUGINS_DIR"
 export CLOUDFORMATION_ROOT_SCRIPTS="$BITOPS_PLUGIN_DIR"
 export CLOUDFORMATION_ROOT_OPERATIONS="$BITOPS_OPSREPO_ENVIRONMENT_DIR"
 export CFN_STACK_NAME="$BITOPS_CFN_STACK_NAME"
@@ -40,6 +40,23 @@ if [ -f "$CLOUDFORMATION_BITOPS_CONFIG" ]; then
 else
   echo "cloudformation - No BitOps config"
 fi
+
+ls -ltr $PLUGINS_ROOT_DIR
+
+# Check for dependent aws plugin
+if [ ! -d $PLUGINS_ROOT_DIR/aws ]; then
+    echo "aws plugin is missing..."
+    exit 1
+else
+    # Check for dependent kubectl plugin
+    if [ ! -d $PLUGINS_ROOT_DIR/kubectl ]; then
+    echo "kubectl plugin is missing..."
+    exit 1
+    else
+    echo "All dependent plugins found. Continuing with deployment.."
+    fi
+fi
+
 
 # Check for Before Deploy Scripts
 # bash $SCRIPTS_DIR/deploy/before-deploy.sh "$CLOUDFORMATION_ROOT_OPERATIONS"
