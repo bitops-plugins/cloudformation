@@ -1,7 +1,9 @@
 # Bitops Plugin for Cloudformation
 
 ## Introduction
-This is one of the required plugins that sets credentials for AWS to run deployments using BitOps.
+This plugin will let BitOps to automatically deploy ``cloudformation`` templates on AWS platform. 
+
+This plugin also manages ``create-stack`` or ``update-stack`` natively at the plugin level.
 
 ## Installation
 
@@ -32,7 +34,7 @@ bitops:
 
 ## Deployment
 
-Cloudformation plugin uses ```bitops.config.yaml``` located in the operations repo when deploying resources using aws cloudformation templates.
+``cloudformation`` plugin uses ```bitops.config.yaml``` located in the operations repo when deploying resources using aws cloudformation templates.
 
 ### Sample Config
 ```
@@ -62,8 +64,8 @@ cloudformation:
 Calls `aws cloudformation validate-template` 
 
 -------------------
-### cfn-stack-action
-* **BitOps Property:** `cfn-stack-action`
+### stack-action
+* **BitOps Property:** `stack-action`
 * **Environment Variable:** `CFN_STACK_ACTION`
 * **default:** `deploy`
 
@@ -74,15 +76,7 @@ Controls what cloudformation action to apply on the stack
 ## Options Configuration
 
 -------------------
-### cfn-stack-action
-* **BitOps Property:** `cfn-stack-name`
-* **Environment Variable:** `CFN_STACK_NAME`
-* **default:** `""`
-
-Cloudformation stack name
-
--------------------
-### cfn-stack-action
+### cfn-stack-name
 * **BitOps Property:** `cfn-stack-name`
 * **Environment Variable:** `CFN_STACK_NAME`
 * **default:** `""`
