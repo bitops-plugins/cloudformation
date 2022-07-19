@@ -12,12 +12,14 @@ cloudformation:
           type: string
           export_env: CFN_STACK_ACTION
           default: deploy
+          required: true
     options:
       type: object
       properties:
         cfn-stack-name:
           type: string
           export_env: CFN_STACK_NAME
+          required: true
         s3bucket:
           type: string
           export_env: CFN_TEMPLATE_S3_BUCKET
