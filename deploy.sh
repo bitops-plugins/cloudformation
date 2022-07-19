@@ -40,8 +40,6 @@ else
   echo "cloudformation - No BitOps config"
 fi
 
-ls -ltr $PLUGINS_ROOT_DIR
-
 # Check for dependent aws plugin
 if [ ! -d $PLUGINS_ROOT_DIR/aws ]; then
     echo "aws plugin is missing..."
