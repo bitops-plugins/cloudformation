@@ -41,7 +41,6 @@ cloudformation:
               properties:
                 template-param-flag: 
                   type: boolean
-                  default: true
                   export_env: CFN_PARAMS_FLAG
                 template-param-file:
                   type: string
