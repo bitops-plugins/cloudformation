@@ -94,6 +94,13 @@ else
       )
   else
       echo "Parameters file doesn't exist..."
+      
+      echo "aws cloudformation $ACTION \
+      --stack-name $CFN_STACK_NAME \
+      --region $AWS_DEFAULT_REGION \
+      $CFN_TEMPLATE_PARAM \
+      --capabilities $CFN_CAPABILITY"
+      
       CFN_OUTPUT=$(aws cloudformation $ACTION \
       --stack-name $CFN_STACK_NAME \
       --region $AWS_DEFAULT_REGION \
