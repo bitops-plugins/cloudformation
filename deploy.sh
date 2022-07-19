@@ -4,7 +4,6 @@ set -x
 
 echo ""
 echo "Welcome to the CloudFormation BitOps plugin!"
-printenv
 
 # cloudformation vars
 # export CLOUDFORMATION_ROOT="$ENVROOT/cloudformation" 
