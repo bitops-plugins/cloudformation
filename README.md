@@ -53,7 +53,12 @@ cloudformation:
 
 ```
 
-## CLI Configuration
+## CLI and options configuration of cloudformation ``bitops.schema.yaml``
+
+### Cloudformation BitOps Schema
+
+[bitops.schema.yaml](https://github.com/bitops-plugins/cloudformation/blob/main/bitops.schema.yaml)
+
 
 -------------------
 ### validate-cfn
@@ -93,19 +98,18 @@ Allows you to use CloudFormation nested stacks. Both properties must be set in o
 
 -------------------
 
-### cfn-s3-bucket
-* **BitOps Property:** `cfn-s3-bucket`
+### s3bucket
+* **BitOps Property:** `s3bucket`
 * **Environment Variable:** `CFN_TEMPLATE_S3_BUCKET`
 * **default:** `""`
 
-### cfn-s3-prefix
-* **BitOps Property:** `cfn-s3-prefix`
+### s3prefix
+* **BitOps Property:** `s3prefix`
 * **Environment Variable:** `CFN_S3_PREFIX`
 * **default:** `""`
 
-### cfn-merge-parameters
-* **BitOps Property:** `cfn-merge-parameters`
-
+<!-- ### cfn-merge-parameters
+* **BitOps Property:** `cfn-merge-parameters` -->
 
 Cloudformation capabilities
 
@@ -123,7 +127,7 @@ Template file to apply the params against
 
 Additional parameters.
 ###### enabled
-* **BitOps Property:** `cfn-files.parameters.enabled`
+* **BitOps Property:** `cfn-files.parameters.template-param-flag`
 * **Environment Variable:** `CFN_PARAMS_FLAG`
 * **default:** `true`
 ###### template-param-file
@@ -132,7 +136,7 @@ Additional parameters.
 * **default:** `""`
 
 -------------------
-### cfn-merge-parameters
+<!-- ### cfn-merge-parameters
 * **BitOps Property:** `cfn-merge-parameters`
 
 Allows for param files to be used. Has the following child-properties
@@ -147,7 +151,7 @@ True if optional option should be used.
 * **Environment Variable:** `CFN_MERGE_DIRECTORY`
 * **default:** `parameters`
 
-The directory within the ansible workspace that contains json files that will be merged.
+The directory within the ansible workspace that contains json files that will be merged. -->
 
 -------------------
 
