@@ -63,7 +63,7 @@ cloudformation:
 -------------------
 ### validate-cfn
 * **BitOps Property:** `validate-cfn`
-* **Environment Variable:** `CFN_TEMPLATE_VALIDATION`
+* **Environment Variable:** `BITOPS_CFN_TEMPLATE_VALIDATION`
 * **default:** `true`
 
 Calls `aws cloudformation validate-template` 
@@ -71,7 +71,7 @@ Calls `aws cloudformation validate-template`
 -------------------
 ### stack-action
 * **BitOps Property:** `stack-action`
-* **Environment Variable:** `CFN_STACK_ACTION`
+* **Environment Variable:** `BITOPS_CFN_STACK_ACTION`
 * **default:** `deploy`
 
 Controls what cloudformation action to apply on the stack
@@ -83,7 +83,7 @@ Controls what cloudformation action to apply on the stack
 -------------------
 ### cfn-stack-name
 * **BitOps Property:** `cfn-stack-name`
-* **Environment Variable:** `CFN_STACK_NAME`
+* **Environment Variable:** `BITOPS_CFN_STACK_NAME`
 * **default:** `""`
 
 Cloudformation stack name
@@ -91,7 +91,7 @@ Cloudformation stack name
 -------------------
 ### capabilities
 * **BitOps Property:** `capabilities`
-* **Environment Variable:** `CFN_CAPABILITY`
+* **Environment Variable:** `BITOPS_CFN_CAPABILITY`
 * **default:** `""`
 
 Allows you to use CloudFormation nested stacks. Both properties must be set in order to use nested stacks.
@@ -100,12 +100,12 @@ Allows you to use CloudFormation nested stacks. Both properties must be set in o
 
 ### s3bucket
 * **BitOps Property:** `s3bucket`
-* **Environment Variable:** `CFN_TEMPLATE_S3_BUCKET`
+* **Environment Variable:** `BITOPS_CFN_TEMPLATE_S3_BUCKET`
 * **default:** `""`
 
 ### s3prefix
 * **BitOps Property:** `s3prefix`
-* **Environment Variable:** `CFN_S3_PREFIX`
+* **Environment Variable:** `BITOPS_CFN_S3_PREFIX`
 * **default:** `""`
 
 <!-- ### cfn-merge-parameters
@@ -128,11 +128,11 @@ Template file to apply the params against
 Additional parameters.
 ###### enabled
 * **BitOps Property:** `cfn-files.parameters.template-param-flag`
-* **Environment Variable:** `CFN_PARAMS_FLAG`
+* **Environment Variable:** `BITOPS_CFN_PARAMS_FLAG`
 * **default:** `true`
 ###### template-param-file
 * **BitOps Property:** `cfn-files.parameters.template-param-file`
-* **Environment Variable:** `CFN_TEMPLATE_PARAMS_FILENAME`
+* **Environment Variable:** `BITOPS_CFN_TEMPLATE_PARAMS_FILENAME`
 * **default:** `""`
 
 -------------------
