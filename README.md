@@ -1,36 +1,19 @@
 # Bitops Plugin for Cloudformation
 
+## Table of contents
+
+1. [Introduction](#Introduction)
+2. [Installation](https://github.com/bitops-plugins/cloudformation/blob/main/INSTALL.md)
+3. [Deployment](#Deployment)
+
+---
+
+
 ## Introduction
 This plugin will let BitOps to automatically deploy ``cloudformation`` templates on AWS platform. 
 
 This plugin also manages ``create-stack`` or ``update-stack`` natively at the plugin level.
 
-## Installation
-
-This plugin gets installed through ```bitops.config.yaml```.
-
-### Sample Config
-
-```
-bitops:
-  fail_fast: true 
-  run_mode: default
-  logging:      
-    level: DEBUG
-    color:
-      enabled: true
-    filename: bitops-run
-    err: bitops.logs
-    path: /var/logs/bitops
-  opsrepo_root_default_dir: _default
-  plugins:    
-    cloudformation:
-      source: https://github.com/bitops-plugins/cloudformation
-...
-...
-...
-
-```
 
 ## Deployment
 
