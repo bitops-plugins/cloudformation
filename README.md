@@ -60,6 +60,13 @@ Calls `aws cloudformation validate-template`
 
 Controls what cloudformation action to apply on the stack. This config is a required parameter. 
 
+### skip-deploy
+* **BitOps Property:** `skip-deploy`
+* **Environment Variable:** `TERRAFORM_SKIP_DEPLOY`
+* **default:** `none`
+* **Required:** `false`
+* **Description:** If set to true, regardless of the stack-action, deployment actions will be skipped.
+
 -------------------
 
 ## Options Configuration
