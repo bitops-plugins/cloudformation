@@ -27,7 +27,7 @@ export BITOPS_CONFIG_SCHEMA="$CLOUDFORMATION_ROOT_SCRIPTS/bitops.schema.yaml"
 
 export SCRIPTS_DIR="$CLOUDFORMATION_ROOT_SCRIPTS/scripts"
 
-if [ "$SKIP_DEPLOY_CFN" == "true" ] || [ "$CFN_SKIP_DEPLOY" == "true" ]; then
+if [ "$CFN_SKIP_DEPLOY" == "true" ]; then
   echo "CFN_SKIP_DEPLOY is set.  Skipping."
   exit 0
 fi
