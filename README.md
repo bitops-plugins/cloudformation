@@ -60,6 +60,12 @@ Calls `aws cloudformation validate-template`
 
 Controls what cloudformation action to apply on the stack. This config is a required parameter. 
 
+### skip-deploy
+* **BitOps Property:** `skip-deploy`
+* **Environment Variable:** `CFN_SKIP_DEPLOY`
+* **default:** `""`
+* **Description:** If set to true, regardless of the stack-action, deployment actions will be skipped.
+
 -------------------
 
 ## Options Configuration
@@ -148,5 +154,5 @@ The directory within the ansible workspace that contains json files that will be
 Although not captured in `bitops.config.yml`, the following environment variables can be set to further customize behaviour
 
 -------------------
-### SKIP_DEPLOY_CLOUDFORMATION
+### CFN_SKIP_DEPLOY
 Will skill all cloudformation executions. This superseeds all other configuration

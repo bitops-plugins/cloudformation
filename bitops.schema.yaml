@@ -20,6 +20,10 @@ cloudformation:
           type: string
           export_env: CFN_STACK_NAME
           required: true
+        skip-deploy:
+          type: boolean
+          parameter: skip-deploy
+          export_env: CFN_SKIP_DEPLOY
         s3bucket:
           type: string
           export_env: CFN_TEMPLATE_S3_BUCKET
