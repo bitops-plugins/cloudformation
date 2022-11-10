@@ -27,8 +27,7 @@ export BITOPS_CONFIG_SCHEMA="$CLOUDFORMATION_ROOT_SCRIPTS/bitops.schema.yaml"
 
 export SCRIPTS_DIR="$CLOUDFORMATION_ROOT_SCRIPTS/scripts"
 
-SANITIZED_CFN_SKIP_DEPLOY=$(echo "$CFN_SKIP_DEPLOY" | tr '[:upper:]' '[:lower:]')
-if [ "$SANITIZED_CFN_SKIP_DEPLOY" == "true" ]; then
+if [ "$CFN_SKIP_DEPLOY" == "true" ]; then
   echo "CFN_SKIP_DEPLOY is set.  Skipping."
   exit 0
 fi
