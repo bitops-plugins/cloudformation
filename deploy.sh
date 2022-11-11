@@ -60,6 +60,10 @@ else
     fi
 fi
 
+if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+  echo "AWS ACCESS KEY or SECRET isn't set. Check out our doc to understand what you're missing https://bitops.sh/examples/#docker-run-examples"
+fi
+
 
 # Check for Before Deploy Scripts
 # bash $SCRIPTS_DIR/deploy/before-deploy.sh "$CLOUDFORMATION_ROOT_OPERATIONS"
