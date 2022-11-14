@@ -39,7 +39,7 @@ cloudformation:
             template-file:
               type: string
               export_env: CFN_TEMPLATE_FILENAME
-              required: True
+              required: true
             parameters:
               type: object
               properties:

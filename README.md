@@ -56,7 +56,7 @@ Calls `aws cloudformation validate-template`
 * **BitOps Property:** `stack-action`
 * **Environment Variable:** `BITOPS_CFN_STACK_ACTION`
 * **default:** `deploy`
-* **required:** `"True"`
+* **required:** `"true"`
 
 Controls what cloudformation action to apply on the stack. This config is a required parameter. 
 
@@ -75,7 +75,7 @@ Controls what cloudformation action to apply on the stack. This config is a requ
 * **BitOps Property:** `cfn-stack-name`
 * **Environment Variable:** `BITOPS_CFN_STACK_NAME`
 * **default:** `""`
-* **required:** `"True"`
+* **required:** `"true"`
 
 Cloudformation stack name. This config is a required parameter.
 
@@ -113,7 +113,7 @@ Allows for param files to be used. Has the following child-properties
 #### template-file
 * **BitOps Property:** `cfn-files.template-file`
 * **Environment Variable:** `BITOPS_CFN_TEMPLATE_FILENAME`
-* **required:** `"True"`
+* **required:** `"true"`
 
 Template file to apply the params against. This config is a required parameter.
 

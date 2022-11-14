@@ -98,7 +98,7 @@ cd $CLOUDFORMATION_ROOT_OPERATIONS
 # bash $SCRIPTS_DIR/aws/sts.get-caller-identity.sh
 
 # always run cfn template validation first
-if [[ "${CFN_TEMPLATE_VALIDATION}" == "True" ]] || [[ "${CFN_TEMPLATE_VALIDATION}" == "true" ]]; then
+if [[ "${CFN_TEMPLATE_VALIDATION}" == "true" ]] || [[ "${CFN_TEMPLATE_VALIDATION}" == "True" ]]; then
   echo "Running Cloudformation Template Validation"
   bash $CLOUDFORMATION_ROOT_SCRIPTS/scripts/cloudformation_validate.sh "$CFN_TEMPLATE_FILENAME"
 fi
