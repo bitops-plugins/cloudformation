@@ -60,8 +60,11 @@ else
     fi
 fi
 
-if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-  echo "AWS ACCESS KEY or SECRET isn't set. Check out our doc to understand what you're missing https://bitops.sh/examples/#docker-run-examples"
+aws sts get-caller-identity
+result=$?
+if [ $result != 0 ]; then
+    echo "AWS ACCESS KEY or SECRET isn't set. Check out our doc to understand what you're missing https://bitops.sh/examples/#docker-run-examples"
+    exit $result
 fi
 
 
