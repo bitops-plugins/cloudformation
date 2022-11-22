@@ -63,7 +63,8 @@ fi
 aws sts get-caller-identity
 result=$?
 if [ $result != 0 ]; then
-    echo "AWS ACCESS KEY or SECRET isn't set. Check out our doc to understand what you're missing https://bitops.sh/examples/#docker-run-examples"
+    echo "AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY required for AWS authentication are not set or invalid."
+    echo "Check out BitOps documentation to understand what you're missing https://bitops.sh/examples/#docker-run-examples"
     exit $result
 fi
 
